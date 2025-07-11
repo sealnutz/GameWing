@@ -1,0 +1,31 @@
+cd C:\ariusai
+
+.\venv\Scripts\Activate.ps1
+
+pip install -r watcher\requirements.txt
+
+cd C:\ariusai\watcher
+
+python watcher.py
+
+cd C:\ariusai\hub
+
+dir
+
+Run the docker app
+
+
+cd C:\ariusai
+cd watcher
+python watcher.py
+
+cd C:\ariusai\hub          # IMPORTANT: this folder must contain
+                           #   • docker-compose.yml
+                           #   • Dockerfile
+                           #   • .env
+                           #   • server.js  package.json  etc.
+docker compose up
+
+python echo_server.py
+
+"C:\ariusai\echo_server.py"
