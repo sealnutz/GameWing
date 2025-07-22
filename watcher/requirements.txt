@@ -1,4 +1,4 @@
-psutil==5.9.*
-pywin32>=307
-websockets==12.*
-win10toast==0.9
+grpcio==1.62.*
+grpcio-tools==1.62.*
+faster-whisper==0.11.*
+torchaudio==2.2.*

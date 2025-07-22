@@ -1,32 +1,31 @@
-# docker-compose.yml
+version: "3.9"
+
 services:
-  # ---------- WebSocket Hub ----------
+  # ───────── WebSocket Hub ─────────
   hub:
-    build: .                          # uses hub/Dockerfile
+    build: .                       # uses hub/Dockerfile
     container_name: arius-hub
-    ports:
-      - "3000:3000"                   # host:container
     env_file:
       - ./.env
+    ports:
+      - "3000:3000"                # host:container
     volumes:
-      - .:/usr/src/app                # live-reload during dev
+      - .:/usr/src/app             # live‑reload during dev
     depends_on:
       - postgres
 
-  # ---------- PostgreSQL ----------
+  # ───────── PostgreSQL ───────────
   postgres:
     image: postgres:16-alpine
     container_name: arius-postgres
     restart: unless-stopped
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - ./.env
     volumes:
-      - pgdata:/var/lib/postgresql/data        # persistent DB files
-      - ./sql:/docker-entrypoint-initdb.d      # run *.sql on first boot
+      - pgdata:/var/lib/postgresql/data      # persistent DB files
+      - ./sql:/docker-entrypoint-initdb.d    # runs init.sql on first boot
     ports:
-      - "5432:5432"                   # optional; exposes DB to host
+      - "5432:5432"              # optional; expose DB to host
 
 volumes:
-  pgdata:                              # named volume persists data
+  pgdata:                          # named volume for Postgres data

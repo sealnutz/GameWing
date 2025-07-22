@@ -1,4 +1,0 @@
-psutil==5.9.*
-pywin32==306
-websockets==12.*
-win10toast==0.9
