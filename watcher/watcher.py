@@ -1,18 +1,20 @@
-import asyncio
-import json
-import psutil
-import websockets
-import win32gui
-import win32process
+import asyncio, json, psutil, websockets, win32gui, win32process
 from win10toast import ToastNotifier
-from datetime import datetime  # New import for ISO timestamp
+from datetime import datetime
 
-WS_URL = "ws://localhost:3000"  # Hub server URL
-POLL_SEC = 5                    # Seconds between samples
-toast = ToastNotifier()         # Reserved for future notifications
+# ─── CONFIG ───────────────────────────────────────────────────────────────────
+WS_URL    = "ws://192.168.68.115:3000"
+HEADERS   = {"X-Auth": "SUPERSECRET"}
+USER_ID   = "vance"
+DEVICE_ID = "pc-2"
+POLL_SEC  = 5
+RETRY_SEC = 5          # wait this long before reconnect attempts
+# ──────────────────────────────────────────────────────────────────────────────
+
+toast = ToastNotifier()   # reserved for future notifications
+
 
 def get_foreground_exe() -> str:
-    """Return the executable name of the current foreground window."""
     hwnd = win32gui.GetForegroundWindow()
     if hwnd == 0:
         return "none"
@@ -22,22 +24,29 @@ def get_foreground_exe() -> str:
     except psutil.Error:
         return "unknown.exe"
 
-async def main() -> None:
-    headers = {
-        "X-Auth": "changeme"  # Must match SHARED_TOKEN from .env
-    }
-    async with websockets.connect(WS_URL, extra_headers=headers) as ws:
-        while True:
-            event = {
-                "ts": datetime.now().isoformat(timespec="seconds"),  # fixed timestamp format
-                "app": get_foreground_exe(),
-                "state": "ACTIVE_FOREGROUND",
-                "user_id": "sealn",     # Update per PC
-                "device_id": "PC1"      # Update per PC
-            }
-            await ws.send(json.dumps(event))
-            print(event)
-            await asyncio.sleep(POLL_SEC)
+
+async def run_watcher() -> None:
+    while True:
+        try:
+            print(f"🔌  Connecting to {WS_URL} …")
+            async with websockets.connect(WS_URL, extra_headers=HEADERS) as ws:
+                print("✅ Connected — streaming events every", POLL_SEC, "s")
+                while True:
+                    event = {
+                        "ts": datetime.now().isoformat(timespec="seconds"),
+                        "app": get_foreground_exe(),
+                        "state": "ACTIVE_FOREGROUND",
+                        "user_id": USER_ID,
+                        "device_id": DEVICE_ID
+                    }
+                    await ws.send(json.dumps(event))
+                    print(event)
+                    await asyncio.sleep(POLL_SEC)
+        except Exception as e:
+            print("⚠️  Connection problem:", e)
+            print(f"⏳ Retrying in {RETRY_SEC} s …")
+            await asyncio.sleep(RETRY_SEC)
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run_watcher())
