@@ -2,13 +2,13 @@ cd C:\ariusai
 
 .\venv\Scripts\Activate.ps1
 
-pip install -r watcher\requirements.txt
+pip install -r scout\requirements.txt
 
-cd C:\ariusai\watcher
+cd C:\ariusai\scout
 
-python watcher.py
+python scout.py
 
-cd C:\ariusai\hub
+cd C:\ariusai\beacon
 
 dir
 
@@ -16,10 +16,10 @@ Run the docker app
 
 
 cd C:\ariusai
-cd watcher
-python watcher.py
+cd scout
+python scout.py
 
-cd C:\ariusai\hub          # IMPORTANT: this folder must contain
+cd C:\ariusai\beacon          # IMPORTANT: this folder must contain
                            #   • docker-compose.yml
                            #   • Dockerfile
                            #   • .env

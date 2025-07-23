@@ -2,7 +2,7 @@ import asyncio, websockets
 
 async def echo(ws):
     async for msg in ws:
-        print("From watcher:", msg)
+        print("From scout:", msg)
         await ws.send(msg)
 
 async def main():
