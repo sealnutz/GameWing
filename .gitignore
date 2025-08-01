@@ -1,1 +1,6 @@
 beacon/node_modules/
+beacon/.env
+beacon/qc
+beacon/query
+beacon/start
+beacon/stop
