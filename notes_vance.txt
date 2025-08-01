@@ -1,0 +1,31 @@
+cd C:\ariusai
+
+.\venv\Scripts\Activate.ps1
+
+pip install -r scout\requirements.txt
+
+cd C:\ariusai\scout
+
+python scout.py
+
+cd C:\ariusai\beacon
+
+dir
+
+Run the docker app
+
+
+cd C:\ariusai
+cd scout
+python scout.py
+
+cd C:\ariusai\beacon          # IMPORTANT: this folder must contain
+                           #   • docker-compose.yml
+                           #   • Dockerfile
+                           #   • .env
+                           #   • server.js  package.json  etc.
+docker compose up
+
+python echo_server.py
+
+"C:\ariusai\echo_server.py"
